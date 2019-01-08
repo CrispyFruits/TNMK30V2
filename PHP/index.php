@@ -52,42 +52,94 @@
 
     $index = 0;
     while($row = mysqli_fetch_array($query)) {
-      $completeSet[$index]['ItemID'] = $row['ItemID'];
-      $completeSet[$index]['ColorID'] = $row['ColorID'];
-      $completeSet[$index]['Quantity'] = $row['Quantity'];
-      $completeSet[$index]['Partname'] = $row['Partname'];
-      $completeSet[$index]['Colorname'] = $row['Colorname'];
+      $completeSetParts[$index]['ItemID'] = $row['ItemID'];
+      $completeSetParts[$index]['ColorID'] = $row['ColorID'];
+      $completeSetParts[$index]['Quantity'] = $row['Quantity'];
+      $completeSetParts[$index]['Partname'] = $row['Partname'];
+      $completeSetParts[$index]['Colorname'] = $row['Colorname'];
       $index++;
     }
 
+    //ask for minifigs and stores in completeset array
+    $query = mysqli_query($connection, "SELECT minifigs.Minifigname, inventory.ItemID FROM minifigs, inventory WHERE inventory.SetID='$SetID' AND inventory.ItemID=minifigs.MinifigID");
+
+    $i = 0;
+    while($row = mysqli_fetch_array($query)) {
+      $completeSetMinifigs[$i]['Name'] = $row['Minifigname'];
+      $completeSetMinifigs[$i]['ItemID'] = $row['ItemID'];
+      $i++;
+    }
 
     print("<button class='accordion'>Complete Set</button>");
     print("<div class='panel'>\n");
     print("<table>\n<tr>\n");
     print("<th>Picture</th><th>Quantity</th><th>Part Name</th> <th>Color</th> <th>Part ID</th> </tr>\n");
     
-    //print rows
+    //print part rows
     for($j = 0; $j < $index; $j++){
       
-      $quantity = $completeSet[$j]['Quantity'];
-      $partName = $completeSet[$j]['Partname'];
-      $colorName = $completeSet[$j]['Colorname'];
-      $partID = $completeSet[$j]['ItemID'];
+      $quantity = $completeSetParts[$j]['Quantity'];
+      $partName = $completeSetParts[$j]['Partname'];
+      $colorName = $completeSetParts[$j]['Colorname'];
+      $colorID = $completeSetParts[$j]['ColorID'];
+      $partID = $completeSetParts[$j]['ItemID'];
       //function for finding image url
-      $picSource = "not added";
+      $imagesearch = mysqli_query($connection, "SELECT * FROM images, parts WHERE ItemTypeID='P' AND parts.PartID='$partID' AND images.ColorID='$colorID' AND images.ItemID=parts.PartID");
+        
+      $imageinfo = mysqli_fetch_array($imagesearch);
+      if($imageinfo['has_jpg']) { 
+        $filename = "P/$colorID/$partID.jpg";
+      } 
+      else if($imageinfo['has_gif']) { 
+        $filename = "P/$colorID/$partID.gif";
+      } 
+      else { 
+        $filename = "noimage_small.png";
+      }
+  
+      $picSource = $prefix . $filename;
 
       print("<tr><td><img src='$picSource' alt='Img missing'></td><td class='centerTd'>$quantity</td><td>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
     }
     
+    //printing minifig rows
+    if(!empty($completeSetMinifigs[0])){
+      print("<tr><th colspan='5'>Minifigs:</th></tr>");
+      print("<tr><th colspan='1'>Image</th><th colspan='3'>Name</th><th colspan='1'>Minifig ID</th></tr>");
+
+      for($j = 0; $j < $i; $j++){
+        $name = $completeSetMinifigs[$j]['Name'];
+        $minifigID = $completeSetMinifigs[$j]['ItemID'];
+        //function for finding image url
+
+        $imagesearch = mysqli_query($connection, "SELECT * FROM images WHERE images.ItemID='$minifigID'");
+          
+        $imageinfo = mysqli_fetch_array($imagesearch);
+        if($imageinfo['has_jpg']) { 
+          $filename = "M/$minifigID.jpg";
+        } 
+        else if($imageinfo['has_gif']) { 
+          $filename = "M/$minifigID.gif";
+        } 
+        else { 
+            $filename = "noimage_small.png";
+        }
+    
+        $picSource = $prefix . $filename;
+
+        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'></td><td colspan='3' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
+      }
+    }
+
     print("</table>");
     print("</div>");
 
     // calculate the pieces this person owns of this set and store the results in an array
     for($j = 0; $j < $index; $j++){
-      $partID = $completeSet[$j]['ItemID']; //first value is 11477
-      $colorID = $completeSet[$j]['ColorID'];//first value is 156
-      $colorName = $completeSet[$j]['Colorname'];
-      $partName = $completeSet[$j]['Partname'];
+      $partID = $completeSetParts[$j]['ItemID']; //first value is 11477
+      $colorID = $completeSetParts[$j]['ColorID'];//first value is 156
+      $colorName = $completeSetParts[$j]['Colorname'];
+      $partName = $completeSetParts[$j]['Partname'];
       
       $result = mysqli_query($connection, 
       "SELECT collection.Quantity setQuantity, sets.SetID, inventory.Quantity partQuantity, parts.PartID, colors.ColorID 
@@ -117,17 +169,30 @@
     print("<th>Picture</th><th>Needed</th><th>Have</th><th>Part Name</th> <th>Color</th> <th>Part ID</th></tr>\n");
 
     for($j = 0; $j < $index; $j++){
-      
-      
+  
         $quantity = $ownedPartsArray[$j]['Quantity'];
         $partName = $ownedPartsArray[$j]['Partname'];
         $colorName = $ownedPartsArray[$j]['Colorname'];
         $partID = $ownedPartsArray[$j]['PartID'];
-        $piecesNeeded = $completeSet[$j]['Quantity'];
+        $colorID = $completeSetParts[$j]['ColorID'];
+        $piecesNeeded = $completeSetParts[$j]['Quantity'];
         //function for finding image url
-        $picSource = "not added";
+        $imagesearch = mysqli_query($connection, "SELECT * FROM images, parts WHERE ItemTypeID='P' AND parts.PartID='$partID' AND images.ColorID='$colorID' AND images.ItemID=parts.PartID");
+        
+        $imageinfo = mysqli_fetch_array($imagesearch);
+        if($imageinfo['has_jpg']) { 
+          $filename = "P/$colorID/$partID.jpg";
+        } 
+        else if($imageinfo['has_gif']) { 
+          $filename = "P/$colorID/$partID.gif";
+        } 
+        else { 
+          $filename = "noimage_small.png";
+        }
+    
+        $picSource = $prefix . $filename;
 
-        if($quantity < $completeSet[$j]['Quantity']){
+        if($quantity < $completeSetParts[$j]['Quantity']){
           continue;
         }
         else{
@@ -150,11 +215,25 @@
       $partName = $ownedPartsArray[$j]['Partname'];
       $colorName = $ownedPartsArray[$j]['Colorname'];
       $partID = $ownedPartsArray[$j]['PartID'];
-      $piecesNeeded = $completeSet[$j]['Quantity'];
+      $colorID = $ownedPartsArray[$j]['ColorID'];
+      $piecesNeeded = $completeSetParts[$j]['Quantity'];
       //function for finding image url
-      $picSource = "not added";
+      $imagesearch = mysqli_query($connection, "SELECT * FROM images, parts WHERE ItemTypeID='P' AND parts.PartID='$partID' AND images.ColorID='$colorID' AND images.ItemID=parts.PartID");
+        
+      $imageinfo = mysqli_fetch_array($imagesearch);
+      if($imageinfo['has_jpg']) { 
+        $filename = "P/$colorID/$partID.jpg";
+      } 
+      else if($imageinfo['has_gif']) { 
+        $filename = "P/$colorID/$partID.gif";
+      } 
+      else { 
+        $filename = "noimage_small.png";
+      }
+  
+      $picSource = $prefix . $filename;
 
-      if($quantity >= $completeSet[$j]['Quantity']){
+      if($quantity >= $completeSetParts[$j]['Quantity']){
         continue;
       }
       else{
@@ -188,7 +267,7 @@
 
         while($row = mysqli_fetch_array($result)){
           for ($k=0; $k < $index; $k++) { 
-            if($partID == $completeSet[$k]['ItemID'] && $row['partQuantity'] >= $completeSet[$k]['Quantity'] && $row['ColorID'] != $completeSet[$k]['ColorID']){
+            if($partID == $completeSetParts[$k]['ItemID'] && $row['partQuantity'] >= $completeSetParts[$k]['Quantity'] && $row['ColorID'] != $completeSetParts[$k]['ColorID']){
               $differentColor[$j]['PartID'] = $partID;
               $differentColor[$j]['ColorID'] = $row['ColorID'];
               $differentColor[$j]['Quantity'] = $row['partQuantity'];
@@ -238,7 +317,7 @@
         $colorName = $differentColor[$j]['Colorname'];
         $colorID = $differentColor[$j]['ColorID'];
         $partID = $differentColor[$j]['PartID'];
-        $piecesNeeded = $completeSet[$j]['Quantity'];
+        $piecesNeeded = $completeSetParts[$j]['Quantity'];
 
         $imagesearch = mysqli_query($connection, "SELECT * FROM images, parts WHERE ItemTypeID='P' AND parts.PartID='$partID' AND images.ColorID='$colorID' AND images.ItemID=parts.PartID");
         
