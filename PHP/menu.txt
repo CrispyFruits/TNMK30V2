@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="../CSS/style.css">
+  <script src="../JS/script.js"></script>
+  <title>TNMK30 - Projektarbete</title>
+
+</head>
+
+<body>
+  <nav>
+    <div class="top-nav"><img id="logo" src="../IMAGES/logopic.jpg" alt="en bild xD" onclick="redirectMySets()">
+      <h1>LEGO</h1>
+    </div>
+    <div class="bot-nav">
+    <div id="nav-btns">
+        <div class="nav-btn" onclick="redirectMySets()">
+          <p>My Sets</p>
+        </div>
+        <div class="nav-btn" onclick="redirectAllSets()">
+          <p>All Sets</p>
+        </div>
+        <div class="nav-btn">
+          <p>My Parts</p>
+        </div>
+        <form method="get" action="search_results.php">
+        <input type="text" name="search" placeholder="Enter atleast 3 char" required size="30" minlength="3">
+        <input type="submit" value="Sök">
+        <span class="validity"></span>
+    </form>
+        <!-- kanske ska vara input submit istället för div-->
+      </div>
+    </div>
+
+  </nav>
+<!-- tjena -->

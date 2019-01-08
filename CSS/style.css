@@ -1,0 +1,187 @@
+@font-face {
+    font-family: gothic;
+    src: url(../FONTS/Gothic/Gothic13.ttf);
+}
+
+*{
+  margin: 0px;
+  padding: 0px;
+  font-family: gothic;
+}
+/* NAV ↓ */
+nav{
+  width: 100%;
+  height: auto;
+}
+
+.top-nav{
+  background-color: #2e4e8b;
+  width: auto;
+  height: 80px;
+  display: flex;
+
+}
+
+.top-nav h1{
+  margin: auto;
+  color: #f4fff7;
+  font-size: 3em;
+}
+
+#logo{
+  width: auto;
+  height: 100%;
+
+}
+
+.bot-nav{
+  background-color: #8db9ff;
+  padding: 10px;
+  width: auto;
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+}
+
+#nav-btns{
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+}
+
+.nav-btn{
+  border: solid 5px #f4fff7;
+  color: #f4fff7;
+  border-radius: 10px;
+  width: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+}
+
+.nav-btn:hover{
+  background-color: #2e4e8b;
+}
+
+.nav-btn:active{
+  background-color: #f4fff7;
+}
+/* MAIN ↓ */
+
+main{
+  width: 80%; 
+  margin: auto;
+  margin-top: 35px;
+  display: flex;
+  font-size: 30px;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+/* Divs for each set ↓ */
+.setBox{
+  width: 600px;
+  margin-bottom: 50px;
+}
+
+.setPic{
+
+  float: left;
+}
+
+.setList{
+  float: left;
+  margin-left: 40px;
+}
+
+.readMore{
+  clear: both;
+  float: right;
+  padding-right: 450px;  
+ 
+}
+
+a{
+  color: #2e4e8b;
+}
+
+a:hover{
+  color: #8db9ff;
+}
+
+a:active{
+  color: #f4fff7;
+}
+
+/* Page for a specific set ↓*/
+
+.setHeader{
+  text-align: center;
+}
+
+#fullSet{
+  display: flex;
+  align-items: center; 
+  flex-direction: column;
+}
+
+th{
+  padding: 10px;
+}
+
+td{
+  padding: 10px;
+}
+
+.centerTd{
+  text-align: center;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+table{
+  border-top: solid black 2px;
+  margin-top: 40px;
+  width:100%;
+}
+
+.tableHeader{
+  text-align: center;
+  padding: 10px;
+  background-color: #8db9ff;
+  border: solid #2e4e8b 5px;
+}
+
+/* for accordion tables ↓*/
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.2s;
+  text-align: center;
+}
+
+.active, .accordion:hover {
+  background-color: #ccc; 
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+
+.pagination{
+  width:100%;
+  text-align: center;
+}
