@@ -46,7 +46,7 @@
     print("<img src='$picSource'/>");
     print("</div>");
 
-    //ask server for set pieces and store in array
+    //ask server for set parts and store in array
     $query = mysqli_query($connection,"SELECT inventory.ItemID, inventory.ColorID, inventory.Quantity, parts.Partname, colors.Colorname FROM inventory, parts, colors WHERE inventory.SetID='$SetID' AND
     inventory.ColorID=colors.ColorID AND inventory.ItemID=parts.PartID");
 
@@ -61,13 +61,15 @@
     }
 
     //ask for minifigs and stores in completeset array
-    $query = mysqli_query($connection, "SELECT minifigs.Minifigname, inventory.ItemID FROM minifigs, inventory WHERE inventory.SetID='$SetID' AND inventory.ItemID=minifigs.MinifigID");
+    $query = mysqli_query($connection, "SELECT minifigs.Minifigname, inventory.ItemID, inventory.Quantity FROM minifigs, inventory WHERE inventory.SetID='$SetID' AND inventory.ItemID=minifigs.MinifigID");
 
-    $i = 0;
+    $minifigIndex = 0;
     while($row = mysqli_fetch_array($query)) {
-      $completeSetMinifigs[$i]['Name'] = $row['Minifigname'];
-      $completeSetMinifigs[$i]['ItemID'] = $row['ItemID'];
-      $i++;
+      $completeSetMinifigs[$minifigIndex]['Name'] = $row['Minifigname'];
+      $completeSetMinifigs[$minifigIndex]['ItemID'] = $row['ItemID'];
+      $completeSetMinifigs[$minifigIndex]['Quantity'] = $row['Quantity'];
+
+      $minifigIndex++;
     }
 
     print("<button class='accordion'>Complete Set</button>");
@@ -105,11 +107,12 @@
     //printing minifig rows
     if(!empty($completeSetMinifigs[0])){
       print("<tr><th colspan='5'>Minifigs:</th></tr>");
-      print("<tr><th colspan='1'>Image</th><th colspan='3'>Name</th><th colspan='1'>Minifig ID</th></tr>");
+      print("<tr><th colspan='1'>Image</th><th colspan='1'>Quantity</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
 
-      for($j = 0; $j < $i; $j++){
+      for($j = 0; $j < $minifigIndex; $j++){
         $name = $completeSetMinifigs[$j]['Name'];
         $minifigID = $completeSetMinifigs[$j]['ItemID'];
+        $quantity = $completeSetMinifigs[$j]['Quantity'];
         //function for finding image url
 
         $imagesearch = mysqli_query($connection, "SELECT * FROM images WHERE images.ItemID='$minifigID'");
@@ -127,7 +130,7 @@
     
         $picSource = $prefix . $filename;
 
-        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'></td><td colspan='3' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
+        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td colspan='1'>$quantity</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
       }
     }
 
@@ -160,7 +163,34 @@
       
     }
     
+    $ownedMinifigs = 0;
+    //calculate owned minifigures and store in two different arrays
+    for($j = 0; $j < $minifigIndex; $j++){
+      $minifigName = $completeSetMinifigs[$j]['Name'];
+      $minifigID = $completeSetMinifigs[$j]['ItemID'];
 
+      $result = mysqli_query($connection, 
+      "SELECT collection.Quantity setQuantity, inventory.ItemID, minifigs.Minifigname, inventory.Quantity partQuantity FROM inventory, collection, minifigs 
+      WHERE inventory.ItemID='$minifigID' AND inventory.SetID=collection.SetID AND inventory.ItemID=minifigs.MinifigID");
+
+      while($row = mysqli_fetch_array($result)){
+        $ownedMinifigs += $row['setQuantity'] * $row['partQuantity'];
+      }
+
+      if ($ownedMinifigs < $completeSetMinifigs[$j]['Quantity']){
+        $missingMinifigs[$j]['Name'] = $minifigName;
+        $missingMinifigs[$j]['ItemID'] = $minifigID;
+        $missingMinifigs[$j]['Quantity'] = $ownedMinifigs; 
+      }
+
+      else{
+        $ownedMinifigsArray[$j]['Name'] = $minifigName;
+        $ownedMinifigsArray[$j]['ItemID'] = $minifigID;
+        $ownedMinifigsArray[$j]['Quantity'] = $ownedMinifigs; 
+        }
+      
+
+    }
 
     //print owned pieces of this set from array
     print("<button class='accordion'>Pieces you own of this set</button>");
@@ -200,6 +230,35 @@
         }
     }
 
+    if(!empty($ownedMinifigsArray[0])){
+      print("<tr><th colspan='5'>Minifigs:</th></tr>");
+      print("<tr><th colspan='1'>Image</th><th colspan='1'>Quantity</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
+
+      for($j = 0; $j < $minifigIndex; $j++){
+        $name = $ownedMinifigsArray[$j]['Name'];
+        $minifigID = $ownedMinifigsArray[$j]['ItemID'];
+        $quantity = $ownedMinifigsArray[$j]['Quantity'];
+        
+        //function for finding image url
+        $imagesearch = mysqli_query($connection, "SELECT * FROM images WHERE images.ItemID='$minifigID'");
+          
+        $imageinfo = mysqli_fetch_array($imagesearch);
+        if($imageinfo['has_jpg']) { 
+          $filename = "M/$minifigID.jpg";
+        } 
+        else if($imageinfo['has_gif']) { 
+          $filename = "M/$minifigID.gif";
+        } 
+        else { 
+            $filename = "noimage_small.png";
+        }
+    
+        $picSource = $prefix . $filename;
+
+        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td colspan='1'>$quantity</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
+      }
+    }
+    
     print("</table>");
     print("</div>");
 
@@ -248,8 +307,37 @@
       }
   }
 
-    print("</table>");
-    print("</div>");
+  if(!empty($missingMinifigs[0])){
+    print("<tr><th colspan='5'>Minifigs:</th></tr>");
+    print("<tr><th colspan='1'>Image</th><th colspan='1'>Quantity</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
+
+    for($j = 0; $j < $minifigIndex; $j++){
+      $name = $missingMinifigs[$j]['Name'];
+      $minifigID = $missingMinifigs[$j]['ItemID'];
+      $quantity = $missingMinifigs[$j]['Quantity'];
+      
+      //function for finding image url
+      $imagesearch = mysqli_query($connection, "SELECT * FROM images WHERE images.ItemID='$minifigID'");
+        
+      $imageinfo = mysqli_fetch_array($imagesearch);
+      if($imageinfo['has_jpg']) { 
+        $filename = "M/$minifigID.jpg";
+      } 
+      else if($imageinfo['has_gif']) { 
+        $filename = "M/$minifigID.gif";
+      } 
+      else { 
+          $filename = "noimage_small.png";
+      }
+  
+      $picSource = $prefix . $filename;
+
+      print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td colspan='1'>$quantity</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
+    }
+  }
+
+  print("</table>");
+  print("</div>");
 
     //stores different color of piece in an array
     for($j = 0; $j < $index; $j++){
