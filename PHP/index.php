@@ -229,15 +229,16 @@
           print("<tr><td><img src='$picSource' alt='Img missing'></td><td>$piecesNeeded</td><td class='centerTd'>$quantity</td><td>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
         }
     }
-
+    //print owned minifigures
     if(!empty($ownedMinifigsArray[0])){
       print("<tr><th colspan='5'>Minifigs:</th></tr>");
-      print("<tr><th colspan='1'>Image</th><th colspan='1'>Quantity</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
+      print("<tr><th colspan='1'>Image</th><th>Needed</th><th colspan='1'>Have</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
 
       for($j = 0; $j < $minifigIndex; $j++){
         $name = $ownedMinifigsArray[$j]['Name'];
         $minifigID = $ownedMinifigsArray[$j]['ItemID'];
-        $quantity = $ownedMinifigsArray[$j]['Quantity'];
+        $owned = $ownedMinifigsArray[$j]['Quantity'];
+        $needed = $completeSetMinifigs[$j]['Quantity'];
         
         //function for finding image url
         $imagesearch = mysqli_query($connection, "SELECT * FROM images WHERE images.ItemID='$minifigID'");
@@ -255,7 +256,7 @@
     
         $picSource = $prefix . $filename;
 
-        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td colspan='1'>$quantity</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
+        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td>$needed</td><td colspan='1'>$owned</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
       }
     }
     
@@ -306,15 +307,16 @@
         print("<tr><td><img src='$picSource' alt='Img missing'></td><td>$piecesNeeded</td><td class='centerTd'>$quantity</td><td>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
       }
   }
-
+  //prints missing minifigs
   if(!empty($missingMinifigs[0])){
     print("<tr><th colspan='5'>Minifigs:</th></tr>");
-    print("<tr><th colspan='1'>Image</th><th colspan='1'>Quantity</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
+    print("<tr><th colspan='1'>Image</th><th>Needed</th><th colspan='1'>Have</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
 
     for($j = 0; $j < $minifigIndex; $j++){
       $name = $missingMinifigs[$j]['Name'];
       $minifigID = $missingMinifigs[$j]['ItemID'];
-      $quantity = $missingMinifigs[$j]['Quantity'];
+      $owned = $missingMinifigs[$j]['Quantity'];
+      $needed = $completeSetMinifigs[$j]['Quantity'];
       
       //function for finding image url
       $imagesearch = mysqli_query($connection, "SELECT * FROM images WHERE images.ItemID='$minifigID'");
@@ -332,7 +334,7 @@
   
       $picSource = $prefix . $filename;
 
-      print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td colspan='1'>$quantity</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
+      print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td>$needed</td><td colspan='1'>$owned</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
     }
   }
 
