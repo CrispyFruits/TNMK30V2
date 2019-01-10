@@ -11,6 +11,9 @@
 ?>
 
 <main>
+
+  <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button> 
+
   <?php
   //if a specific set is set in the get variable, only that set is shown with details of set. 
   if(isset($_GET['setID'])){
@@ -74,7 +77,8 @@
 
     print("<button class='accordion'>Complete Set</button>");
     print("<div class='panel'>\n");
-    print("<table>\n<tr>\n");
+    print("<table cellspacing='0'>\n<tr>\n");
+    print("<tr><th class='topTableHead' colspan='5'>Parts:</th></tr>");
     print("<th>Picture</th><th>Quantity</th><th>Part Name</th> <th>Color</th> <th>Part ID</th> </tr>\n");
     
     //print part rows
@@ -101,12 +105,12 @@
   
       $picSource = $prefix . $filename;
 
-      print("<tr><td><img src='$picSource' alt='Img missing'></td><td class='centerTd'>$quantity</td><td>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
+      print("<tr><td><img src='$picSource' alt='Img missing'></td><td class='centerTd'>$quantity</td><td class='nameTd'>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
     }
     
     //printing minifig rows
     if(!empty($completeSetMinifigs[0])){
-      print("<tr><th colspan='5'>Minifigs:</th></tr>");
+      print("<tr><th class='topTableHead' colspan='6'>Minifigs:</th></tr>");
       print("<tr><th colspan='1'>Image</th><th colspan='1'>Quantity</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
 
       for($j = 0; $j < $minifigIndex; $j++){
@@ -130,7 +134,7 @@
     
         $picSource = $prefix . $filename;
 
-        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td colspan='1'>$quantity</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
+        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td colspan='1' class='centerTd'>$quantity</td></td><td colspan='2' class='centerTd nameTd'>$name</td><td class='centerTd' colspan='1'>$minifigID</td></tr>");
       }
     }
 
@@ -196,6 +200,7 @@
     print("<button class='accordion'>Pieces you own of this set</button>");
     print("<div class='panel'>\n");
     print("<table>\n<tr>");
+    print("<tr><th class='topTableHead' colspan='6'>Parts:</th></tr>");
     print("<th>Picture</th><th>Needed</th><th>Have</th><th>Part Name</th> <th>Color</th> <th>Part ID</th></tr>\n");
 
     for($j = 0; $j < $index; $j++){
@@ -226,12 +231,12 @@
           continue;
         }
         else{
-          print("<tr><td><img src='$picSource' alt='Img missing'></td><td>$piecesNeeded</td><td class='centerTd'>$quantity</td><td>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
+          print("<tr><td><img src='$picSource' alt='Img missing'></td><td class='centerTd'>$piecesNeeded</td><td class='centerTd'>$quantity</td><td class='nameTd'>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
         }
     }
     //print owned minifigures
     if(!empty($ownedMinifigsArray[0])){
-      print("<tr><th colspan='5'>Minifigs:</th></tr>");
+      print("<tr><th class='topTableHead' colspan='5'>Minifigs:</th></tr>");
       print("<tr><th colspan='1'>Image</th><th>Needed</th><th colspan='1'>Have</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
 
       for($j = 0; $j < $minifigIndex; $j++){
@@ -256,7 +261,7 @@
     
         $picSource = $prefix . $filename;
 
-        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td>$needed</td><td colspan='1'>$owned</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
+        print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td class='centerTd'>$needed</td><td class='centerTd' colspan='1'>$owned</td></td><td colspan='2' class='centerTd'>$name</td><td class='centerTd' colspan='1'>$minifigID</td></tr>");
       }
     }
     
@@ -267,6 +272,7 @@
     print("<button class='accordion'>Pieces you miss for this set</button>");
     print("<div class='panel'>\n");
     print("<table>\n<tr>");
+    print("<tr><th class='topTableHead' colspan='6'>Parts:</th></tr>");
     print("<th>Picture</th><th>Needed</th><th>Have</th><th>Part Name</th> <th>Color</th> <th>Part ID</th></tr>\n");
 
     for($j = 0; $j < $index; $j++){
@@ -304,12 +310,12 @@
         $missingPartsArray[$j]['ColorID'] = $colorID;
         $missingPartsArray[$j]['Colorname'] = $colorName;
 
-        print("<tr><td><img src='$picSource' alt='Img missing'></td><td>$piecesNeeded</td><td class='centerTd'>$quantity</td><td>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
+        print("<tr><td><img src='$picSource' alt='Img missing'></td><td class='centerTd'>$piecesNeeded</td><td class='centerTd'>$quantity</td><td class='nameTd'>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
       }
   }
   //prints missing minifigs
   if(!empty($missingMinifigs[0])){
-    print("<tr><th colspan='5'>Minifigs:</th></tr>");
+    print("<tr><th class='topTableHead' colspan='5'>Minifigs:</th></tr>");
     print("<tr><th colspan='1'>Image</th><th>Needed</th><th colspan='1'>Have</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
 
     for($j = 0; $j < $minifigIndex; $j++){
@@ -334,7 +340,7 @@
   
       $picSource = $prefix . $filename;
 
-      print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td>$needed</td><td colspan='1'>$owned</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1'>$minifigID</td></tr>");
+      print("<tr><td colspan='1'><img src='$picSource' alt='Img missing'><td class='centerTd'>$needed</td><td class='centerTd' colspan='1'>$owned</td></td><td colspan='2' class='centerTd'>$name</td><td colspan='1' class='centerTd'>$minifigID</td></tr>");
     }
   }
 
@@ -343,27 +349,29 @@
 
     //stores different color of piece in an array
     for($j = 0; $j < $index; $j++){
-      if(array_key_exists($j, $missingPartsArray)){
-        $partID = $missingPartsArray[$j]['PartID']; 
-        $colorID = $missingPartsArray[$j]['ColorID'];
-        $colorName = $missingPartsArray[$j]['Colorname'];
-        $partName = $missingPartsArray[$j]['Partname'];
-        
-        $result = mysqli_query($connection, 
-        "SELECT collection.Quantity setQuantity, sets.SetID, inventory.Quantity partQuantity, parts.PartID, colors.ColorID, parts.Partname, colors.Colorname 
-        FROM sets, collection, parts, colors, inventory 
-        WHERE inventory.ItemID=parts.PartID AND sets.SetID=collection.SetID AND sets.SetID=inventory.SetID 
-        AND inventory.ColorID=colors.ColorID AND parts.PartID='$partID' ORDER BY parts.PartID LIMIT 2");
+      if(!empty($missingPartsArray)){
+        if(array_key_exists($j, $missingPartsArray)){
+          $partID = $missingPartsArray[$j]['PartID']; 
+          $colorID = $missingPartsArray[$j]['ColorID'];
+          $colorName = $missingPartsArray[$j]['Colorname'];
+          $partName = $missingPartsArray[$j]['Partname'];
+          
+          $result = mysqli_query($connection, 
+          "SELECT collection.Quantity setQuantity, sets.SetID, inventory.Quantity partQuantity, parts.PartID, colors.ColorID, parts.Partname, colors.Colorname 
+          FROM sets, collection, parts, colors, inventory 
+          WHERE inventory.ItemID=parts.PartID AND sets.SetID=collection.SetID AND sets.SetID=inventory.SetID 
+          AND inventory.ColorID=colors.ColorID AND parts.PartID='$partID' ORDER BY parts.PartID LIMIT 2");
 
-        while($row = mysqli_fetch_array($result)){
-          for ($k=0; $k < $index; $k++) { 
-            if($partID == $completeSetParts[$k]['ItemID'] && $row['partQuantity'] >= $completeSetParts[$k]['Quantity'] && $row['ColorID'] != $completeSetParts[$k]['ColorID']){
-              $differentColor[$j]['PartID'] = $partID;
-              $differentColor[$j]['ColorID'] = $row['ColorID'];
-              $differentColor[$j]['Quantity'] = $row['partQuantity'];
-              $differentColor[$j]['Partname'] = $row['Partname'];
-              $differentColor[$j]['Colorname'] = $row['Colorname'];
-              break;
+          while($row = mysqli_fetch_array($result)){
+            for ($k=0; $k < $index; $k++) { 
+              if($partID == $completeSetParts[$k]['ItemID'] && $row['partQuantity'] >= $completeSetParts[$k]['Quantity'] && $row['ColorID'] != $completeSetParts[$k]['ColorID']){
+                $differentColor[$j]['PartID'] = $partID;
+                $differentColor[$j]['ColorID'] = $row['ColorID'];
+                $differentColor[$j]['Quantity'] = $row['partQuantity'];
+                $differentColor[$j]['Partname'] = $row['Partname'];
+                $differentColor[$j]['Colorname'] = $row['Colorname'];
+                break;
+              }
             }
           }
         }
@@ -372,24 +380,26 @@
 
     //searches for all pieces of same color and stores
     for($j = 0; $j < $index; $j++){
-      if(array_key_exists($j, $differentColor)){
-        $partID = $differentColor[$j]['PartID']; 
-        $colorID = $differentColor[$j]['ColorID'];
-        $colorName = $differentColor[$j]['Colorname'];
-        $partName = $differentColor[$j]['Partname'];
-        
-        $result = mysqli_query($connection, 
-        "SELECT collection.Quantity setQuantity, sets.SetID, inventory.Quantity partQuantity, parts.PartID, colors.ColorID 
-        FROM sets, collection, parts, colors, inventory 
-        WHERE inventory.ItemID=parts.PartID AND sets.SetID=collection.SetID AND sets.SetID=inventory.SetID 
-        AND inventory.ColorID=colors.ColorID AND parts.PartID='$partID' AND colors.ColorID='$colorID' ORDER BY parts.PartID");
+      if(!empty($differentColor)){
+        if(array_key_exists($j, $differentColor)){
+          $partID = $differentColor[$j]['PartID']; 
+          $colorID = $differentColor[$j]['ColorID'];
+          $colorName = $differentColor[$j]['Colorname'];
+          $partName = $differentColor[$j]['Partname'];
+          
+          $result = mysqli_query($connection, 
+          "SELECT collection.Quantity setQuantity, sets.SetID, inventory.Quantity partQuantity, parts.PartID, colors.ColorID 
+          FROM sets, collection, parts, colors, inventory 
+          WHERE inventory.ItemID=parts.PartID AND sets.SetID=collection.SetID AND sets.SetID=inventory.SetID 
+          AND inventory.ColorID=colors.ColorID AND parts.PartID='$partID' AND colors.ColorID='$colorID' ORDER BY parts.PartID");
 
-        $ownedParts = 0;
-        while($row = mysqli_fetch_array($result)){
-          $ownedParts += $row['setQuantity'] * $row['partQuantity'];
+          $ownedParts = 0;
+          while($row = mysqli_fetch_array($result)){
+            $ownedParts += $row['setQuantity'] * $row['partQuantity'];
+          }
+
+          $differentColor[$j]['Quantity'] = $ownedParts;
         }
-
-        $differentColor[$j]['Quantity'] = $ownedParts;
       }
     }
 
@@ -398,33 +408,37 @@
     print("<button class='accordion'>Pieces you own of this set but in the wrong color</button>");
     print("<div class='panel'>\n");
     print("<table>\n<tr>");
-    print("<th>Picture</th><th>Needed</th><th>Have</th><th>Part Name</th> <th>Color</th> <th>Part ID</th></tr>\n");
+    print("<tr><th class='topTableHead' colspan='7'>Parts:</th></tr>");
+    print("<th>Picture</th><th>Needed</th><th>Have</th><th>Part Name</th> <th>Needed Color</th><th>Owned Color</th> <th>Part ID</th></tr>\n");
 
     for($j = 0; $j < $index; $j++){
-      if(array_key_exists($j, $differentColor)){
-        $quantity = $differentColor[$j]['Quantity'];
-        $partName = $differentColor[$j]['Partname'];
-        $colorName = $differentColor[$j]['Colorname'];
-        $colorID = $differentColor[$j]['ColorID'];
-        $partID = $differentColor[$j]['PartID'];
-        $piecesNeeded = $completeSetParts[$j]['Quantity'];
+      if(!empty($differentColor)){
+        if(array_key_exists($j, $differentColor)){
+          $quantity = $differentColor[$j]['Quantity'];
+          $partName = $differentColor[$j]['Partname'];
+          $colorName = $differentColor[$j]['Colorname'];
+          $colorNameNeeded = $completeSetParts[$j]['Colorname'];
+          $colorID = $differentColor[$j]['ColorID'];
+          $partID = $differentColor[$j]['PartID'];
+          $piecesNeeded = $completeSetParts[$j]['Quantity'];
 
-        $imagesearch = mysqli_query($connection, "SELECT * FROM images, parts WHERE ItemTypeID='P' AND parts.PartID='$partID' AND images.ColorID='$colorID' AND images.ItemID=parts.PartID");
-        
-        $imageinfo = mysqli_fetch_array($imagesearch);
-        if($imageinfo['has_jpg']) { 
-          $filename = "P/$colorID/$partID.jpg";
-        } 
-        else if($imageinfo['has_gif']) { 
-          $filename = "P/$colorID/$partID.gif";
-        } 
-        else { 
-          $filename = "noimage_small.png";
+          $imagesearch = mysqli_query($connection, "SELECT * FROM images, parts WHERE ItemTypeID='P' AND parts.PartID='$partID' AND images.ColorID='$colorID' AND images.ItemID=parts.PartID");
+          
+          $imageinfo = mysqli_fetch_array($imagesearch);
+          if($imageinfo['has_jpg']) { 
+            $filename = "P/$colorID/$partID.jpg";
+          } 
+          else if($imageinfo['has_gif']) { 
+            $filename = "P/$colorID/$partID.gif";
+          } 
+          else { 
+            $filename = "noimage_small.png";
+          }
+    
+          $picSource = $prefix . $filename;
+
+          print("<tr><td><img src='$picSource' alt='Img missing'></td><td class='centerTd'>$piecesNeeded</td><td class='centerTd'>$quantity</td><td class='nameTd'>$partName</td><td class='centerTd'>$colorNameNeeded</td><td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
         }
-  
-        $picSource = $prefix . $filename;
-
-        print("<tr><td><img src='$picSource' alt='Img missing'></td><td>$piecesNeeded</td><td class='centerTd'>$quantity</td><td>$partName</td> <td class='centerTd'>$colorName</td> <td class='centerTd'>$partID</td></tr>");
       }
     }
 
@@ -439,10 +453,6 @@
 
 
     while($row = mysqli_fetch_array($query)) {
-      
-      $prefix = "http://www.itn.liu.se/~stegu76/img.bricklink.com/";
-      $SetID = $row['SetID'];
-      $setName = $row['Setname'];
       
       $imagesearch = mysqli_query($connection, "SELECT * FROM images, sets WHERE ItemTypeID='S' AND SetID='$SetID' AND images.ItemID=sets.SetID");
       
