@@ -4,16 +4,26 @@
   $connection = mysqli_connect("mysql.itn.liu.se","lego","","lego");
 	if (!$connection) {
 		die('MySQL connection error');
-	}
+  }
+  
+  
   
   error_reporting(E_ALL);
   ini_set("display_errors", 1);
 ?>
 
+<div id="scrollspyBtns">
+  <button class="scrollspyBtn">Complete Set</button>
+  <button class="scrollspyBtn">Piecees you own for this set</button>
+  <button class="scrollspyBtn">Piecees you miss for this set</button>
+  <button class="scrollspyBtn">Piecees you own for this set but in the wrong color</button>
+</div>
+
 <main>
 
-  <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button> 
+  <!--<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button> -->
 
+  
   <?php
   //if a specific set is set in the get variable, only that set is shown with details of set. 
   if(isset($_GET['setID'])){
@@ -50,17 +60,20 @@
     print("</div>");
 
     //ask server for set parts and store in array
-    $query = mysqli_query($connection,"SELECT inventory.ItemID, inventory.ColorID, inventory.Quantity, parts.Partname, colors.Colorname FROM inventory, parts, colors WHERE inventory.SetID='$SetID' AND
+    $query = mysqli_query($connection,"SELECT inventory.ItemID, inventory.ColorID, inventory.Extra, inventory.Quantity, parts.Partname, colors.Colorname FROM inventory, parts, colors WHERE inventory.SetID='$SetID' AND
     inventory.ColorID=colors.ColorID AND inventory.ItemID=parts.PartID");
 
     $index = 0;
     while($row = mysqli_fetch_array($query)) {
-      $completeSetParts[$index]['ItemID'] = $row['ItemID'];
-      $completeSetParts[$index]['ColorID'] = $row['ColorID'];
-      $completeSetParts[$index]['Quantity'] = $row['Quantity'];
-      $completeSetParts[$index]['Partname'] = $row['Partname'];
-      $completeSetParts[$index]['Colorname'] = $row['Colorname'];
-      $index++;
+
+      if($row['Extra'] == 'N'){
+        $completeSetParts[$index]['ItemID'] = $row['ItemID'];
+        $completeSetParts[$index]['ColorID'] = $row['ColorID'];
+        $completeSetParts[$index]['Quantity'] = $row['Quantity'];
+        $completeSetParts[$index]['Partname'] = $row['Partname'];
+        $completeSetParts[$index]['Colorname'] = $row['Colorname'];
+        $index++;
+      }
     }
 
     //ask for minifigs and stores in completeset array
@@ -77,7 +90,7 @@
 
     print("<button class='accordion'>Complete Set</button>");
     print("<div class='panel'>\n");
-    print("<table cellspacing='0'>\n<tr>\n");
+    print("<table>\n<tr>\n");
     print("<tr><th class='topTableHead' colspan='5'>Parts:</th></tr>");
     print("<th>Picture</th><th>Quantity</th><th>Part Name</th> <th>Color</th> <th>Part ID</th> </tr>\n");
     
@@ -236,7 +249,7 @@
     }
     //print owned minifigures
     if(!empty($ownedMinifigsArray[0])){
-      print("<tr><th class='topTableHead' colspan='5'>Minifigs:</th></tr>");
+      print("<tr><th class='topTableHead' colspan='6'>Minifigs:</th></tr>");
       print("<tr><th colspan='1'>Image</th><th>Needed</th><th colspan='1'>Have</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
 
       for($j = 0; $j < $minifigIndex; $j++){
@@ -315,7 +328,7 @@
   }
   //prints missing minifigs
   if(!empty($missingMinifigs[0])){
-    print("<tr><th class='topTableHead' colspan='5'>Minifigs:</th></tr>");
+    print("<tr><th class='topTableHead' colspan='6'>Minifigs:</th></tr>");
     print("<tr><th colspan='1'>Image</th><th>Needed</th><th colspan='1'>Have</th><th colspan='2'>Name</th><th colspan='1'>Minifig ID</th></tr>");
 
     for($j = 0; $j < $minifigIndex; $j++){
@@ -453,6 +466,10 @@
 
 
     while($row = mysqli_fetch_array($query)) {
+
+      $SetID = $row['SetID'];
+      $setName = $row['Setname'];
+      $prefix = "http://www.itn.liu.se/~stegu76/img.bricklink.com/";
       
       $imagesearch = mysqli_query($connection, "SELECT * FROM images, sets WHERE ItemTypeID='S' AND SetID='$SetID' AND images.ItemID=sets.SetID");
       

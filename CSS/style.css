@@ -71,6 +71,7 @@ nav{
 
 main{
   width: 80%; 
+  z-index: 0;
   margin: auto;
   margin-top: 35px;
   display: flex;
@@ -172,7 +173,7 @@ table{
   border: none;
   text-align: left;
   outline: none;
-  font-size: 15px;
+  font-size: 25px;
   transition: 0.2s;
   text-align: center;
 }
@@ -194,4 +195,21 @@ table{
 .pagination{
   width:100%;
   text-align: center;
+}
+
+/* For scrollspy ↓ */
+
+#scrollspyBtns{
+  width: 150px;
+  display: inline-flex;
+  flex-direction: column;
+  z-index:2;
+  top: 400px;
+  left: 20px;
+  position: fixed;
+}
+
+.scrollspyBtn{
+  font-size: 20px;
+  margin-bottom: 20px;
 }
