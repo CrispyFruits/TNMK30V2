@@ -136,7 +136,7 @@ td{
   padding: 10px;
 }
 
-.centerTd{
+.centerText{
   text-align: center;
 }
 
@@ -201,15 +201,23 @@ table{
 
 #scrollspyBtns{
   width: 150px;
+  padding: 5px;
   display: inline-flex;
   flex-direction: column;
   z-index:2;
   top: 400px;
   left: 20px;
   position: fixed;
+  border: solid 2px #8db9ff;
+  background-color: #f4fff7;
 }
 
 .scrollspyBtn{
   font-size: 20px;
   margin-bottom: 20px;
 }
+
+#scrollBtn4{
+  margin: 0px;
+}
+
