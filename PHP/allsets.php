@@ -15,14 +15,14 @@
 
 <?php
 
-
+    $no_image = false;
  
  if (isset($_GET["page"])) { $page  = $_GET["page"]; } else { $page=1; };
  $limit = 20;
  $start_from = ($page-1) * $limit;
  
  
- $query = mysqli_query($connection, "SELECT sets.SetID, sets.Setname FROM sets ORDER BY sets.SetID LIMIT $start_from,".$limit);
+ $query = mysqli_query($connection, "SELECT sets.SetID, sets.Setname FROM sets ORDER BY sets.Setname LIMIT $start_from,".$limit);
 
 
  while($row = mysqli_fetch_array($query)) {
@@ -34,31 +34,27 @@
    $imagesearch = mysqli_query($connection, "SELECT * FROM images, sets WHERE ItemTypeID='S' AND SetID='$SetID' AND images.ItemID=sets.SetID");
    
    $imageinfo = mysqli_fetch_array($imagesearch);
-   if($imageinfo['has_jpg']) { 
-     $filename = "S/$SetID.jpg";
+   if($imageinfo['has_largejpg']) { 
+     $filename = "SL/$SetID.jpg";
    } 
-   else if($imageinfo['has_gif']) { 
-     $filename = "S/$SetID.gif";
+   else if($imageinfo['has_largegif']) { 
+     $filename = "SL/$SetID.gif";
    } 
    else { 
-     $filename = "noimage_small.png";
-   }
+    $no_image = true;
+    }
 
-   $picSource = $prefix . $filename;
+    if(!$no_image){
+        $picSource = $prefix . $filename;
+    }
+    else{
+        $picSource = "../IMAGES/No_Image.png";
+    }
 
-   $query2 = mysqli_query($connection, "SELECT parts.Partname, inventory.Quantity FROM parts, inventory WHERE inventory.SetID='$SetID' AND inventory.ItemID=parts.PartID LIMIT 5");
-   
-   print('<div class="setBox">');
+   print('<div class="setOverview">');
    print("<p>Set: $SetID</p> <p>$setName</p>");
    print("<img class='setPic' src=\"$picSource\" alt='Picture of Set' />");
-   print('<ul class="setList">');
-   while($row2 = mysqli_fetch_array($query2)) {
-     $partName = $row2['Partname'];
-     $quantity = $row2['Quantity'];
-     print("<li>$quantity x $partName</li>");
-   }
-   print('</ul>');
-   print("<a class='readMore' href='index.php?setID=$SetID'><p>Read More...</p></a>");
+   print("<a class='readMore' href='index.php?setID=$SetID'><p>Show Set</p></a>");
    print('</div>');
    
  }

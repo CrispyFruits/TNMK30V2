@@ -24,9 +24,6 @@
         <div class="nav-btn" onclick="redirectAllSets()">
           <p>All Sets</p>
         </div>
-        <div class="nav-btn">
-          <p>My Parts</p>
-        </div>
         <form method="get" action="search_results.php">
         <input type="text" name="search" placeholder="Enter atleast 3 char" required size="30" minlength="3">
         <input type="submit" value="Sök">

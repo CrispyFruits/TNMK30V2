@@ -4,8 +4,7 @@
 }
 
 *{
-  margin: 0px;
-  padding: 0px;
+ 
   font-family: gothic;
 }
 /* NAV ↓ */
@@ -81,26 +80,41 @@ main{
 }
 
 /* Divs for each set ↓ */
+.setOverview{
+  position: relative;
+  width: 400px;
+  margin-bottom: 50px;
+  border: solid 5px #2e4e8b;
+  text-align: center;
+  overflow: hidden;
+  
+}
+
+.setOverview p{
+  margin: 0px 5px 0px 5px;
+}
+
+.setPic{
+  z-index: 0;
+  
+}
+
 .setBox{
   width: 600px;
   margin-bottom: 50px;
 }
 
-.setPic{
-
-  float: left;
-}
-
-.setList{
-  float: left;
-  margin-left: 40px;
-}
-
 .readMore{
-  clear: both;
-  float: right;
-  padding-right: 450px;  
- 
+  width: 150px;
+  position: absolute;
+  left: 125px;
+  bottom: 0;
+  z-index: 1;
+  border: solid 3px #2e4e8b;
+  padding: 5px;
+  margin-bottom: 20px;
+  background-color: #8db9ffD9; 
+  text-decoration: none;
 }
 
 a{
@@ -221,3 +235,71 @@ table{
   margin: 0px;
 }
 
+/* css for part page ↓ */
+
+.colorExample{
+  display: inline-flex;
+  justify-content: flex-start;
+  flex-direction: row;
+}
+.colorBox{
+  display: inline-flex;
+  justify-content: flex-start;
+  width:50px;
+  height:50px;
+  border: solid black 2px;
+  flex-direction: row;
+  
+}
+.colorBoxchosen{
+  display: inline-block;
+  width:50px;
+  height:50px;
+  border: solid black 2px; 
+  margin-right: 20px;
+}
+
+.colorBox:hover .colorDescr{
+  visibility: visible;
+  opacity: 1;
+}
+.colorDescr{
+  position: absolute;
+  top: 1;
+  bottom: 1;
+  left: 1;
+  right: 1;
+  background: rgba(29, 106, 154, 0.72);
+  color: #fff;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .2s, visibility .2s;
+}
+
+.colorInfo{
+  width:1000px;
+  height:1000px;
+}
+
+.colorList{
+  float: left;
+  margin-left: 40px;
+}
+.colorBoxinfo
+.colorBoxes{
+  display: inline-block;
+  
+}
+.currentItem{
+
+}
+.currentPartsinfo{
+  display:flex;
+}
+.currentPartsinfo{
+  display:flex;
+}
+
+.partInfo{
+  margin-left: 20px;
+}

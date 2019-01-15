@@ -14,3 +14,9 @@ function redirectsearch_Results(){
 function hideCompleteSet(){
     document.getElementById("completeTable").classList.toggle("show");
 }
+
+function changeColor(colorID, SetID, setName, partID){
+    
+    window.location.href = 'my_parts.php?partID=' + partID + '&colorID=' + colorID + '&setID=' + SetID + '&setName=' + setName;
+    
+}
